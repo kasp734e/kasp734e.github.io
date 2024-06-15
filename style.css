@@ -8,7 +8,7 @@
 
 body {
     background-color: #161616;
-    
+
 }
 
 #userPhoto{
@@ -23,19 +23,6 @@ body {
 }
 
 #userName{
-    color: rgb(255, 255, 255);
-    font-size: 2rem;
-    font-weight: 200;
-    line-height: 1.25;
-    margin-bottom: 4rem;
-    display: block;
-    font-family: var(--font);
-    width: auto;
-    text-align: center;
-    text-decoration: none;
-}
-
-#userSmall{
     color: rgb(255, 255, 255);
     font-size: 2rem;
     font-weight: 200;
@@ -94,7 +81,7 @@ body {
     background-color: #363636;
     transition: .5s;
     color: #ffffff;
-    box-shadow: 0 0 31px rgba(0, 0, 0, 0.247); 
+    box-shadow: 0 0 31px rgba(0, 0, 0, 0.247);
     font-weight: 100;
 }
 /* Colors for social links*/
