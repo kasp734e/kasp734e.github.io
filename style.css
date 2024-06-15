@@ -35,6 +35,18 @@ body {
     text-decoration: none;
 }
 
+#userSmall{
+    color: rgb(255, 255, 255);
+    font-size: 2rem;
+    font-weight: 200;
+    line-height: 1.25;
+    margin-bottom: 4rem;
+    display: block;
+    font-family: var(--font);
+    width: auto;
+    text-align: center;
+    text-decoration: none;
+}
 
 .footer{
     color: rgba(255, 255, 255, 0.705);
