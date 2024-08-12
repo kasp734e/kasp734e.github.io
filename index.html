@@ -1,19 +1,38 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-     <meta name="viewport" content="width=device-width, initial-scale=1">
-     <meta charset="UTF-8">
-     <title>Kasper P. B. Jensen</title>
-     <link rel="stylesheet" href="style.css">
-    </head>
-    <body>
-     <img id="userPhoto" title="Hej :)" src="billede.jpg" alt="User Photo">
-       <a id="userName">Kasper P. B. Jensen<br>🇩🇰 21 Randers</a>
-        <div id="links">
-            <a class="link hvr-grow" href="https://instagram.com/jegerkasperjensen" target="_blank" rel="noopener">Instagram</a>
-            <a class="link hvr-grow" href="https://steamcommunity.com/id/KasperPBJ/" target="_blank" rel="noopener">Steam</a>
-            <a class="link hvr-grow" href="https://www.strava.com/athletes/55468373" target="_blank" rel="noopener">Strava</a>
-         </div>
-     <a href="mailto:kasper.pihlsbech.com" class="footer">kasper@pihlsbech.com</a>
-    </body>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="UTF-8">
+    <title>Kasper P. B. Jensen</title>
+    <link rel="stylesheet" href="style.css">
+    <script>
+        function calculateAge(birthDate) {
+            const today = new Date();
+            let age = today.getFullYear() - birthDate.getFullYear();
+            const monthDifference = today.getMonth() - birthDate.getMonth();
+            if (monthDifference < 0 || (monthDifference === 0 && today.getDate() < birthDate.getDate())) {
+                age--;
+            }
+            return age;
+        }
+
+        function updateAge() {
+            const birthDate = new Date(2002, 9, 8); // Replace with your birth date (Year, Month - 1, Day)
+            const age = calculateAge(birthDate);
+            document.getElementById('userAge').textContent = age;
+        }
+
+        window.onload = updateAge;
+    </script>
+</head>
+<body>
+    <img id="userPhoto" title="Hej :)" src="billede.jpg" alt="User Photo">
+    <a id="userName">Kasper P. B. Jensen<br>🇩🇰 <span id="userAge"></span> Randers</a>
+    <div id="links">
+        <a class="link hvr-grow" href="https://instagram.com/jegerkasperjensen" target="_blank" rel="noopener">Instagram</a>
+        <a class="link hvr-grow" href="https://steamcommunity.com/id/KasperPBJ/" target="_blank" rel="noopener">Steam</a>
+        <a class="link hvr-grow" href="https://www.strava.com/athletes/55468373" target="_blank" rel="noopener">Strava</a>
+    </div>
+    <a href="mailto:kasper.pihlsbech.com" class="footer">kasper@pihlsbech.com</a>
+</body>
 </html>
