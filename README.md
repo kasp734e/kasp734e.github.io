@@ -1,1 +1,1 @@
-# En lille personlig hjemmeside med nogle få links ^_^ 
+# En lille personlig hjemmeside med nogle få links 
