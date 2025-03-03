@@ -9,8 +9,66 @@
         <h1>
             Solcelle UI
         </h1>
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;">
+            <div>
+                <h2>Graph 1</h2>
+                <canvas id="graph1" width="300" height="200"></canvas>
+            </div>
+            <div>
+                <h2>Graph 2</h2>
+                <canvas id="graph2" width="300" height="200"></canvas>
+            </div>
+            <div>
+                <h2>Graph 3</h2>
+                <canvas id="graph3" width="300" height="200"></canvas>
+            </div>
+            <div>
+                <h2>Graph 4</h2>
+                <canvas id="graph4" width="300" height="200"></canvas>
+            </div>
+            <div>
+                <h2>Graph 5</h2>
+                <canvas id="graph5" width="300" height="200"></canvas>
+            </div>
+            <div>
+                <h2>Graph 6</h2>
+                <canvas id="graph6" width="300" height="200"></canvas>
+            </div>
+        </div>
 
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script>
+            const mockData = {
+                labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+                datasets: [{
+                    label: 'Mock Data',
+                    data: [65, 59, 80, 81, 56, 55, 40],
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1
+                }]
+            };
 
+            const config = {
+                type: 'line',
+                data: mockData,
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            };
+
+            const graphs = ['graph1', 'graph2', 'graph3', 'graph4', 'graph5', 'graph6'];
+            graphs.forEach(graph => {
+                new Chart(
+                    document.getElementById(graph),
+                    config
+                );
+            });
+        </script>
 
 
     </body>
