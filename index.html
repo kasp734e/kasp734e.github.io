@@ -126,6 +126,17 @@
             transform: scale(1.04);
         }
         .exporting .site-links { display: none; }
+
+        .secret {
+            display: block;
+            width: max-content;
+            margin: -50px auto 24px;
+            font-size: .9rem;
+            text-decoration: none;
+            opacity: .06;
+            transition: opacity .4s;
+        }
+        .secret:hover { opacity: 1; }
         html:not(.exporting) .pdf-only { display: none; }
 
         section {
@@ -322,6 +333,8 @@
             </div>
         </section>
     </main>
+
+    <a class="secret" href="/kat" aria-label="Kat">🐈</a>
 
     <script>
         (function () {
