@@ -1,40 +1,440 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="da">
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta charset="UTF-8">
     <title>Kasper P. B. Jensen</title>
-    <link rel="stylesheet" href="style.css">
-    <script>
-        function calculateAge(birthDate) {
-            const today = new Date();
-            let age = today.getFullYear() - birthDate.getFullYear();
-            const monthDifference = today.getMonth() - birthDate.getMonth();
-            if (monthDifference < 0 || (monthDifference === 0 && today.getDate() < birthDate.getDate())) {
-                age--;
-            }
-            return age;
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <style>
+        :root {
+            --font: 'Ubuntu', sans-serif;
+            --bg: #161616;
+            --card: #2c2c2c;
+            --card-hover: #363636;
+            --ink: #e6e6e6;
+            --heading: #ffffff;
+            --muted: #a2a2a2;
+            --tag: #363636;
         }
 
-        function updateAge() {
-            const birthDate = new Date(2002, 8, 8);
-            const age = calculateAge(birthDate);
-            document.getElementById('userAge').textContent = age;
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            background-color: var(--bg);
+            font-family: var(--font);
+            color: var(--ink);
         }
 
-        window.onload = updateAge;
-    </script>
+        .toolbar {
+            display: flex;
+            justify-content: flex-end;
+            max-width: 675px;
+            margin: 0 auto;
+            padding: 16px 16px 0;
+        }
+
+        .btn {
+            font-family: var(--font);
+            font-size: .85rem;
+            font-weight: 300;
+            background: none;
+            color: #6b6b6b;
+            border: none;
+            padding: 6px 4px;
+            white-space: nowrap;
+            cursor: pointer;
+            transition: color .3s;
+        }
+        .btn:hover { color: var(--ink); }
+        .btn:disabled { opacity: .6; cursor: wait; }
+
+        .cv-paper {
+            max-width: 675px;
+            margin: 0 auto 75px;
+            padding: 0 16px;
+        }
+
+        .cv-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .cv-header img {
+            width: 96px;
+            height: 96px;
+            display: block;
+            margin: 19px auto 20px;
+            border-radius: 50%;
+            object-fit: cover;
+            box-shadow: 1px 0 48px -11px rgba(0, 0, 0, 0.22);
+        }
+
+        .cv-header h1 {
+            margin: 0 0 8px;
+            font-size: 2rem;
+            font-weight: 300;
+            line-height: 1.25;
+            color: var(--heading);
+        }
+
+        .cv-header .subtitle {
+            margin: 0 0 20px;
+            color: var(--muted);
+            font-weight: 300;
+        }
+
+        .contact {
+            display: inline-grid;
+            grid-template-columns: auto auto;
+            gap: 4px 16px;
+            margin: 0;
+            padding: 18px 28px;
+            border-radius: 24px;
+            background: var(--card);
+            font-size: .92rem;
+            text-align: left;
+        }
+        .contact dt { color: var(--muted); }
+        .contact dd { margin: 0; }
+        .contact a { color: inherit; text-decoration: none; }
+        .contact a:hover { color: #fff; }
+
+        .site-links {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin: 24px 0 4px;
+        }
+        .site-links a {
+            background-color: var(--card);
+            color: var(--muted);
+            border-radius: 40px;
+            padding: 10px 20px;
+            text-decoration: none;
+            font-size: 1rem;
+            transform: perspective(1px) translateZ(0);
+            transition: transform .3s, background-color .5s, color .5s, box-shadow .5s;
+        }
+        .site-links a:hover {
+            background-color: var(--card-hover);
+            color: #fff;
+            box-shadow: 0 0 31px rgba(0, 0, 0, 0.247);
+            transform: scale(1.04);
+        }
+        .exporting .site-links { display: none; }
+        html:not(.exporting) .pdf-only { display: none; }
+
+        section {
+            margin-top: 20px;
+            padding: 24px 28px;
+            border-radius: 24px;
+            background: var(--card);
+        }
+
+        h2 {
+            margin: 0 0 14px;
+            font-size: .85rem;
+            font-weight: 500;
+            letter-spacing: .14em;
+            text-transform: uppercase;
+            color: var(--muted);
+        }
+
+        p { margin: 0; line-height: 1.6; font-size: .95rem; }
+
+        .entry { margin-bottom: 18px; break-inside: avoid; }
+        .entry:last-child { margin-bottom: 0; }
+
+        .entry-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            gap: 12px;
+        }
+
+        .entry-head h3 { margin: 0; font-size: 1.05rem; font-weight: 500; color: var(--heading); }
+        .entry-head .period { color: var(--muted); font-size: .88rem; white-space: nowrap; }
+        .entry .org-detail { color: var(--muted); font-weight: 300; font-size: .92rem; margin: 2px 0 6px; }
+
+        ul { margin: 6px 0 0; padding-left: 18px; }
+        li { line-height: 1.55; font-size: .93rem; margin-bottom: 3px; }
+        li a, h3 a { color: inherit; text-decoration-color: var(--muted); text-underline-offset: 2px; }
+        li a:hover, h3 a:hover { color: #fff; }
+
+        .tags { display: flex; flex-wrap: wrap; gap: 8px; }
+        .tag {
+            font-size: .85rem;
+            padding: 5px 12px;
+            border-radius: 40px;
+            background: var(--tag);
+        }
+
+        @media (max-width: 640px) {
+            html:not(.exporting) .cv-header h1 { font-size: 1.6rem; }
+            html:not(.exporting) .contact { display: grid; grid-template-columns: 1fr; gap: 0; }
+            html:not(.exporting) .contact dd { margin-bottom: 6px; }
+            html:not(.exporting) section { padding: 20px; }
+            html:not(.exporting) .entry-head { flex-direction: column; gap: 0; }
+        }
+
+        .exporting .cv-paper {
+            width: 794px;
+            max-width: none;
+            margin: 0;
+            padding: 24px 52px;
+            background: var(--bg);
+        }
+        .exporting .cv-header {
+            display: flex;
+            align-items: center;
+            gap: 28px;
+            margin: 0 0 4px;
+            text-align: left;
+        }
+        .exporting .cv-header img { width: 110px; height: 110px; margin: 0; flex-shrink: 0; box-shadow: none; }
+        .exporting .cv-header h1 { font-size: 1.9rem; line-height: 1.15; margin-bottom: 6px; }
+        .exporting .cv-header .subtitle { margin-bottom: 12px; }
+        .exporting .contact { display: grid; grid-template-columns: auto 1fr; gap: 2px 14px; padding: 0; background: none; border-radius: 0; font-size: .88rem; }
+        .exporting section { margin-top: 10px; padding: 12px 22px; }
+        .exporting h2 { margin-bottom: 8px; }
+        .exporting li { line-height: 1.45; margin-bottom: 2px; }
+        .exporting p { line-height: 1.5; }
+        .exporting .entry { margin-bottom: 10px; }
+        .exporting .entry-head h3 { font-size: 1rem; }
+        .exporting .tag { font-size: .82rem; padding: 4px 10px; }
+
+        @media print {
+            @page { size: A4; margin: 0; }
+            html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            html, body { background: var(--bg); }
+            .toolbar { display: none; }
+            .exporting .cv-paper { width: auto; }
+        }
+    </style>
 </head>
 <body>
-    <img id="userPhoto" title="Hej :)" src="billede.jpg" alt="User Photo">
-    <a id="userName">Kasper Pihlsbech <br> Bredgård Jensen<br>🇩🇰 <span id="userAge"></span> Aarhus</a>
-    <div id="links">
-        <a class="link hvr-grow" href="https://www.github.com/kasp734e" target="_blank" rel="noopener">GitHub</a>
-        <a class="link hvr-grow" href="https://instagram.com/jegerkasperjensen" target="_blank" rel="noopener">Instagram</a>
-        <a class="link hvr-grow" href="https://steamcommunity.com/id/KasperPBJ/" target="_blank" rel="noopener">Steam</a>
-        <a class="link hvr-grow" href="https://www.strava.com/athletes/55468373" target="_blank" rel="noopener">Strava</a>
-        </div>
-    
-    <a href="mailto:kasper.pihlsbech.com" class="footer">kasper@pihlsbech.com</a>
+    <div class="toolbar">
+        <button class="btn" id="downloadBtn">Download CV som PDF ↓</button>
+    </div>
+
+    <main class="cv-paper" id="cv">
+        <header class="cv-header">
+            <img src="profil.jpg" alt="Kasper Jensen">
+            <div>
+                <h1>Kasper Pihlsbech Bredgård Jensen</h1>
+                <p class="subtitle">Softwareteknologi-studerende · Aarhus Universitet</p>
+                <dl class="contact">
+                    <dt>Født</dt>     <dd>8. september 2002 (<span class="age"></span> år)</dd>
+                    <dt>E-mail</dt>    <dd><a href="mailto:kasp734e@gmail.com">kasp734e@gmail.com</a></dd>
+                    <dt class="pdf-only">LinkedIn</dt> <dd class="pdf-only"><a href="https://linkedin.com/in/kasperpbjensen">linkedin.com/in/kasperpbjensen</a></dd>
+                </dl>
+            </div>
+        </header>
+
+        <nav class="site-links">
+            <a href="https://www.github.com/kasp734e" target="_blank" rel="noopener">GitHub</a>
+            <a href="https://linkedin.com/in/kasperpbjensen" target="_blank" rel="noopener">LinkedIn</a>
+            <a href="https://www.strava.com/athletes/55468373" target="_blank" rel="noopener">Strava</a>
+        </nav>
+
+        <section>
+            <h2>Profil</h2>
+            <p>
+                Jeg har altid været interesseret i computere og hvordan de fungerer, og bruger meget af
+                min tid på at blive dygtigere til softwareudvikling. Ved siden af studiet sidder jeg i bestyrelsen på mit kollegie,
+                hvor jeg arrangerer events og er med til at drive beboerdemokratiet.
+            </p>
+        </section>
+
+        <section>
+            <h2>Erhvervserfaring</h2>
+
+            <div class="entry">
+                <div class="entry-head">
+                    <h3><a href="https://risskovteknik.dk" target="_blank" rel="noopener">Risskov Teknik &amp; Solar</a></h3>
+                    <span class="period">aug. 2026 – jan. 2027</span>
+                </div>
+                <div class="org-detail">Softwareingeniør-praktikant</div>
+                <ul>
+                    <li>Med til at udvikle <a href="https://epicore.dk" target="_blank" rel="noopener">Epicore</a> – en AI-drevet platform til intelligent styring af solceller, batterier, elbilladere og varmepumper i danske hjem.</li>
+                </ul>
+            </div>
+        </section>
+
+        <section>
+            <h2>Uddannelse</h2>
+
+            <div class="entry">
+                <div class="entry-head">
+                    <h3>Aarhus Universitet</h3>
+                    <span class="period">2024 – 2028</span>
+                </div>
+                <div class="org-detail">Diplomingeniør, Softwareteknologi</div>
+                <ul>
+                    <li>Embedded systemer og objektorienteret programmering i C++ og C#.</li>
+                    <li>Python til lineær algebra og sandsynlighedsregning.</li>
+                    <li>Containers, Git, SQL og frontendudvikling i React.</li>
+                    <li>Networking, Scrum og Linux.</li>
+                </ul>
+            </div>
+
+            <div class="entry">
+                <div class="entry-head">
+                    <h3>Tradium Randers</h3>
+                    <span class="period">2023 – 2024</span>
+                </div>
+                <div class="org-detail">Kontoruddannelse med speciale i administration</div>
+                <ul>
+                    <li>Et års praktik.</li>
+                    <li>Fem ugers praktik i Spanien hos WebBeds, hvor jeg hjalp med at etablere nye forretningsforbindelser.</li>
+                </ul>
+            </div>
+
+            <div class="entry">
+                <div class="entry-head">
+                    <h3>Randers Statsskole</h3>
+                    <span class="period">2019 – 2022</span>
+                </div>
+                <div class="org-detail">STX</div>
+                <ul>
+                    <li>Matematik A, Fysik B, Kemi B og Biologi B.</li>
+                </ul>
+            </div>
+        </section>
+
+        <section>
+            <h2>Kompetencer</h2>
+            <div class="tags">
+                <span class="tag">C++</span>
+                <span class="tag">C#</span>
+                <span class="tag">Python</span>
+                <span class="tag">JavaScript</span>
+                <span class="tag">React</span>
+                <span class="tag">SQL</span>
+                <span class="tag">Git</span>
+                <span class="tag">Containers</span>
+                <span class="tag">Linux</span>
+                <span class="tag">Scrum</span>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        (function () {
+            const birth = new Date(2002, 8, 8);
+            const today = new Date();
+            let age = today.getFullYear() - birth.getFullYear();
+            const m = today.getMonth() - birth.getMonth();
+            if (m < 0 || (m === 0 && today.getDate() < birth.getDate())) age--;
+            document.querySelectorAll('.age').forEach(el => el.textContent = age);
+        })();
+
+        window.addEventListener('beforeprint', () => document.documentElement.classList.add('exporting'));
+        window.addEventListener('afterprint', () => document.documentElement.classList.remove('exporting'));
+
+        function collectTextLines(root) {
+            const origin = root.getBoundingClientRect();
+            const lines = [];
+            const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+            const range = document.createRange();
+            let node;
+            while ((node = walker.nextNode())) {
+                const parent = node.parentElement;
+                const style = getComputedStyle(parent);
+                if (style.display === 'none' || style.visibility === 'hidden') continue;
+                const fontSize = parseFloat(style.fontSize);
+                const upper = style.textTransform === 'uppercase';
+                const bold = parseInt(style.fontWeight, 10) >= 600;
+                const re = /\S+/g;
+                let match, current = null;
+                while ((match = re.exec(node.data))) {
+                    range.setStart(node, match.index);
+                    range.setEnd(node, match.index + match[0].length);
+                    const r = range.getBoundingClientRect();
+                    if (!r.width) continue;
+                    const word = upper ? match[0].toUpperCase() : match[0];
+                    if (current && Math.abs(r.top - current.top) < fontSize / 2) {
+                        current.text += ' ' + word;
+                        current.right = r.right;
+                    } else {
+                        current = { text: word, left: r.left, right: r.right, top: r.top, bottom: r.bottom, fontSize, bold };
+                        lines.push(current);
+                    }
+                }
+            }
+            return lines.map(l => ({
+                text: l.text,
+                x: l.left - origin.left,
+                width: l.right - l.left,
+                baseline: (l.top + l.bottom) / 2 - origin.top + l.fontSize * 0.35,
+                fontSize: l.fontSize,
+                bold: l.bold
+            }));
+        }
+
+        function addTextLayer(pdf, lines, pageWidthPx, pageHeightPx) {
+            const mmPerPx = 210 / pageWidthPx;
+            const ptPerPx = mmPerPx * 72 / 25.4;
+            lines.forEach(l => {
+                const page = Math.floor(l.baseline / pageHeightPx) + 1;
+                if (page > pdf.internal.getNumberOfPages()) return;
+                pdf.setPage(page);
+                pdf.setFont('helvetica', l.bold ? 'bold' : 'normal');
+                pdf.setFontSize(l.fontSize * ptPerPx);
+                const natural = pdf.getTextWidth(l.text);
+                pdf.text(l.text, l.x * mmPerPx, (l.baseline % pageHeightPx) * mmPerPx, {
+                    renderingMode: 'invisible',
+                    horizontalScale: natural > 0 ? (l.width * mmPerPx) / natural : 1
+                });
+            });
+        }
+
+        document.getElementById('downloadBtn').addEventListener('click', async function () {
+            const btn = this;
+            const label = btn.textContent;
+            btn.disabled = true;
+            btn.textContent = 'Laver PDF…';
+            document.documentElement.classList.add('exporting');
+
+            const cv = document.getElementById('cv');
+            const pageHeightPx = 297 * 96 / 25.4;
+            const pages = Math.ceil(cv.offsetHeight / pageHeightPx);
+            cv.style.minHeight = (pages * pageHeightPx - 2) + 'px';
+            const textLines = collectTextLines(cv);
+
+            try {
+                await html2pdf()
+                    .set({
+                        margin: 0,
+                        filename: 'CV_Kasper_Jensen.pdf',
+                        image: { type: 'jpeg', quality: 0.98 },
+                        html2canvas: { scale: 2, useCORS: true, scrollX: 0, scrollY: 0, backgroundColor: '#161616' },
+                        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+                        pagebreak: { mode: ['css', 'legacy'], avoid: ['.entry', 'section h2'] }
+                    })
+                    .from(cv)
+                    .toPdf()
+                    .get('pdf')
+                    .then(pdf => {
+                        for (let i = 1; i <= pdf.internal.getNumberOfPages(); i++) {
+                            pdf.setPage(i);
+                            pdf.setFillColor(22, 22, 22);
+                            pdf.rect(0, 296, 210, 1, 'F');
+                        }
+                        addTextLayer(pdf, textLines, cv.offsetWidth, pageHeightPx);
+                    })
+                    .save();
+            } finally {
+                cv.style.minHeight = '';
+                document.documentElement.classList.remove('exporting');
+                btn.disabled = false;
+                btn.textContent = label;
+            }
+        });
+    </script>
 </body>
 </html>
